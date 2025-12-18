@@ -1,0 +1,24 @@
+@tailwind utilities;
+
+/* Twinkling stars */
+@keyframes twinkle {
+  0%, 90%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+/* Meteor trails */
+@keyframes meteor-trail {
+  0% { 
+    transform: translateX(0) translateY(0) rotate(45deg); 
+    opacity: 1; 
+    filter: drop-shadow(0 0 10px currentColor);
+  }
+  100% { 
+    transform: translateX(500px) translateY(500px) rotate(45deg); 
+    opacity: 0; 
+    filter: drop-shadow(0 0 0 currentColor);
+  }
+}
+
+.animate-twinkle { animation: twinkle 2s ease-in-out infinite; }
+.animate-meteor-trail { animation: meteor-trail 5s linear infinite; }

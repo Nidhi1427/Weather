@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "noEmit": false,
+    // keep whatever was already here:
+    // "module": "...",
+    // "moduleResolution": "...",
+    // "types": ["node"],
+    // etc.
+  },
+  "include": [
+    "vite.config.ts",
+    "vitest.config.ts"
+  ]
+}
