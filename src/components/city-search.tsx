@@ -58,15 +58,17 @@ const CitySearch = () => {
       </Button>
       <CommandDialog open={open} onOpenChange={setOpen}>
         <CommandInput
-          placeholder="search cities..."
+          placeholder="Type city name (e.g. Bengaluru)..."
           value={query}
           onValueChange={setQuery}
         />
         <CommandList>
-          {query.length > 2 && !isLoading && <CommandEmpty>No cities found.</CommandEmpty>}
+          {query.length > 2 && locations?.length === 0 && !isLoading && (
+            <CommandEmpty>No cities found for "{query}". Try "Bengaluru", "London", "New York".</CommandEmpty>
+          )}
           
           {favorites.length > 0 && (
-            <CommandGroup heading="Favorites">
+            <CommandGroup heading="⭐ Favorites">
               {favorites.map((location: FavoriteCity) => ( 
                 <CommandItem
                   key={location.id}
@@ -75,8 +77,8 @@ const CitySearch = () => {
                 >
                   <Star className="mr-2 h-4 w-4 text-yellow-500" />
                   <span>{location.name}</span>
-                  {location.state && <span className="text-sm text-muted-foreground">{location.state}</span>}
-                  <span className="text-sm text-muted-foreground">{location.country}</span>
+                  {location.state && <span className="text-sm text-muted-foreground">, {location.state}</span>}
+                  <span className="text-sm text-muted-foreground ml-1">{location.country}</span>
                 </CommandItem>
               ))}
             </CommandGroup>
@@ -85,7 +87,7 @@ const CitySearch = () => {
           {history.length > 0 && (
             <>
               <CommandSeparator />
-              <CommandGroup>
+              <CommandGroup heading="⏰ Recent">
                 <div className="flex items-center justify-between px-2 my-2">
                   <p className="text-xs text-muted-foreground">Recent searches</p>
                   <Button
@@ -104,8 +106,8 @@ const CitySearch = () => {
                   >
                     <Clock className="mr-2 h-4 w-4 text-muted-foreground" />
                     <span>{location.name}</span>
-                    {location.state && <span className="text-sm text-muted-foreground">{location.state}</span>}
-                    <span className="text-sm text-muted-foreground">{location.country}</span>
+                    {location.state && <span className="text-sm text-muted-foreground">, {location.state}</span>}
+                    <span className="text-sm text-muted-foreground ml-1">{location.country}</span>
                     <span className="ml-auto text-xs text-muted-foreground">
                       {format(location.searchedAt, "MMM d, h:mm a")}
                     </span>
@@ -117,14 +119,15 @@ const CitySearch = () => {
 
           <CommandSeparator />
 
-          {locations && locations.length > 0 && (
-            <CommandGroup heading="Suggestions">
+          {query.length > 2 && (
+            <CommandGroup heading="🌍 Suggestions">
               {isLoading && (
                 <div className="flex items-center justify-center p-4">
-                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                  <span className="text-sm text-muted-foreground">Searching...</span>
                 </div>
               )}
-              {locations.map((location) => (
+              {locations && locations.length > 0 && locations.map((location) => (
                 <CommandItem
                   key={`${location.lat}${location.lon}`}
                   value={`${location.lat}|${location.lon}|${location.name}|${location.country}`}
@@ -135,7 +138,7 @@ const CitySearch = () => {
                     {location.name}
                     {location.state && <span className="text-sm text-muted-foreground">, {location.state}</span>}
                   </span>
-                  <span className="text-sm text-muted-foreground">{location.country}</span>
+                  <span className="text-sm text-muted-foreground ml-1">{location.country}</span>
                 </CommandItem>
               ))}
             </CommandGroup>
