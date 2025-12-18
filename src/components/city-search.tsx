@@ -25,6 +25,15 @@ interface FavoriteCity {
   lon: number;
 }
 
+interface SearchHistoryItem {
+  lat: number;
+  lon: number;
+  name: string;
+  country: string;
+  state?: string;
+  searchedAt: number;  // ✅ FIXED: number timestamp
+}
+
 const CitySearch = () => {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -98,7 +107,7 @@ const CitySearch = () => {
                     <XCircle className="h-4 w-4" /> Clear
                   </Button>
                 </div>
-                {history.map((location) => (
+                {history.map((location: SearchHistoryItem) => (
                   <CommandItem
                     key={`${location.lat}${location.lon}`}
                     value={`${location.lat}|${location.lon}|${location.name}|${location.country}`}
@@ -109,7 +118,7 @@ const CitySearch = () => {
                     {location.state && <span className="text-sm text-muted-foreground">, {location.state}</span>}
                     <span className="text-sm text-muted-foreground ml-1">{location.country}</span>
                     <span className="ml-auto text-xs text-muted-foreground">
-                      {format(location.searchedAt, "MMM d, h:mm a")}
+                      {format(new Date(location.searchedAt), "MMM d, h:mm a")}
                     </span>
                   </CommandItem>
                 ))}
@@ -127,7 +136,7 @@ const CitySearch = () => {
                   <span className="text-sm text-muted-foreground">Searching...</span>
                 </div>
               )}
-              {locations && locations.length > 0 && locations.map((location) => (
+              {locations && locations.length > 0 && locations.map((location: any) => (
                 <CommandItem
                   key={`${location.lat}${location.lon}`}
                   value={`${location.lat}|${location.lon}|${location.name}|${location.country}`}

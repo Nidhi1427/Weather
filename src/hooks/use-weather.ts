@@ -42,7 +42,23 @@ export function useReverseGeocodeQuery(coordinates: Coordinates | null) {
 export function useLocationSearch(query: string) {
   return useQuery({
     queryKey: WEATHER_KEYS.search(query),
-    queryFn: () => weatherAPI.searchLocations(query),
+    queryFn: async () => {
+      if (query.length < 3) return [];
+      
+      const key = import.meta.env.VITE_API_KEY;
+      if (!key) throw new Error('Missing VITE_API_KEY in .env');
+      
+      const response = await fetch(
+        `/api/geo/1.0/direct?q=${query.trim()}&limit=5&appid=${key}`
+      );
+      
+      if (!response.ok) {
+        throw new Error(`API Error: ${response.status}`);
+      }
+      
+      return response.json();
+    },
     enabled: query.length >= 3,
+    staleTime: 1000 * 60 * 5, // 5 minutes
   });
 }
